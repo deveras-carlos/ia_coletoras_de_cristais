@@ -7,6 +7,8 @@ class Parametro:
     # Simulação
     QTD_AGENTE_SIMPLES = 1
 
+    AGENTE_SIMPLES_MAPA_ID = -10
+
     TAMANHO_MAPA_HORIZONTAL : int = 10
     TAMANHO_MAPA_VERTICAL : int = 10
 
