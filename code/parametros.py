@@ -15,9 +15,9 @@ class Parametro:
     TAMANHO_MAXIMO_OBSTACULOS : int = 10
     QTD_REGIOES_OBSTACULOS : int = 1
 
-    QTD_CRISTAIS_ENERGETICOS : int = 10
-    QTD_CRISTAIS_METAL_RARO : int = 5
-    QTD_ESTRUTURAS_ANTIGAS : int = 2
+    QTD_CRISTAIS_ENERGETICOS : int = 5
+    QTD_CRISTAIS_METAL_RARO : int = 0
+    QTD_ESTRUTURAS_ANTIGAS : int = 0
 
     UTILIDADE_CRISTAL_ENERGETICO : int = 10
     UTILIDADE_CRISTAL_METAL_RARO : int = 20
@@ -27,6 +27,12 @@ class Parametro:
     OBSTACULO_PEDRA : int = -2
     BLOCO_BASE : int = -3
     BLOCO_SPAWN : int = -4
+
+    MAXIMO_BLOQUEIOS_GERACAO_OBSTACULOS : int = 10
+
+    # Base
+    BASE_X : int = 1
+    BASE_Y : int = 1
 
     # Visual
     SCREEN_WINDOW_WIDTH = 1280
