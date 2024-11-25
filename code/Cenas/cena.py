@@ -18,10 +18,10 @@ Menu - cena inicial do jogo com botões de play, créditos e sair
 CenaSimulacao - cena em que ocorre a simulação.
 """
 class Cena:
-    def __init__( self, gerenciador_cenas, size ):
+    def __init__( self, gerenciador_cenas, tamanho ):
         self.gerenciador_cenas = gerenciador_cenas
-        self.surface = pygame.Surface( size, pygame.SRCALPHA )
-        self.size = size
+        self.surface = pygame.Surface( tamanho, pygame.SRCALPHA )
+        self.tamanho = tamanho
 
         self.buttons_set : pygame.sprite.Group = pygame.sprite.Group()
 

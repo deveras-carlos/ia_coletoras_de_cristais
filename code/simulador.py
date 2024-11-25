@@ -4,7 +4,7 @@ from mapa import Mapa
 from Agentes import Agente, AgenteSimples
 from random import randint
 
-class Simulacao:
+class Simulador:
     def __init__(
             self,
             parametro : Parametro

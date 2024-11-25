@@ -34,4 +34,4 @@ class AgenteSimples( Agente ):
                 (dx, dy) for dx, dy in self.visao 
                 if ( self.x + dx + x_corrector , self.y + dy + y_corrector ) not in self.blocos_base
             ]
-            self.nova_direcao(directions)
+            self.nova_direcao( directions )

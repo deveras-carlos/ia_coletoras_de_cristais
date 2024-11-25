@@ -1,7 +1,7 @@
 import sys
 import pygame
 
-from simulacao import Simulacao
+from simulador import Simulador
 from parametros import Parametro
 
 if __name__ == "__main__":
@@ -14,7 +14,7 @@ if __name__ == "__main__":
     screen = pygame.display.set_mode( ( SCREEN_WIDTH, SCREEN_HEIGHT ) )
     pygame.display.set_caption( "Agentes" )
     parametro = Parametro(  )
-    simulacao = Simulacao( parametro )
+    simulacao = Simulador( parametro )
 
     while True:
         for event in pygame.event.get(  ):

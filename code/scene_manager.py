@@ -1,5 +1,8 @@
 import pygame
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT, tile_size
+from Cenas import Cena, CenaMenu, CenaSimulacao
+
+from parametros import Parametro
 
 class SceneManager:
     def __init__( self ):
@@ -9,12 +12,12 @@ class SceneManager:
         # self.icon = pygame.image.load( path_icon ).convert_alpha()
 
         # pygame.display.set_icon( self.icon )
-        pygame.display.set_caption( "Protect the Gilmar" )
+        pygame.display.set_caption( "Agentes coletores de recursos" )
 
-        self.current_scene : Scene = None
+        self.current_scene : Cena = None
         self.current_scene_pos : tuple[ int, int ] = None
 
-        # self.camera : CameraGroup = None
+        self.parametros : Parametro = None
 
         self.backup_scene = None
 
@@ -39,27 +42,21 @@ class SceneManager:
                 self.click_button_start = current # Atualiza o tempo do "último" clique
                 button.handle_event()
 
-    def change_state( self, new_state ):
-        self.state = new_state
-
-    def run( self, game_manager ):
+    def run( self ):
 
         match self.state:
             case "start":
-                self.current_scene = Menu( self, ( SCREEN_WIDTH, SCREEN_HEIGHT ) )
+                self.current_scene = CenaMenu( self, ( SCREEN_WIDTH, SCREEN_HEIGHT ) )
                 self.state = "menu"
             case "menu":
                 pass
             case "loading":
-                pass
+                self.backup_scene = self.current_scene
+                self.current_scene = CenaSimulacao( self, self.parametros )
             case "simulation":
-                if (self.current_scene.player.isShopping):
-                    self.state = "shop"
-
-                if(self.current_scene.store.health_points <= 0):
-                    self.state = "game-over"
+                pass
             case _:
-                self.current_scene = Scene( self, ( SCREEN_WIDTH, SCREEN_HEIGHT ) )
+                self.current_scene = Cena( self, ( SCREEN_WIDTH, SCREEN_HEIGHT ) )
 
         self.current_scene.run(  )
 

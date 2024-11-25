@@ -1,12 +1,14 @@
 import pygame
 from .button import Button
-from .Cena import Cena
+from .cena import Cena
 from settings import great_color
 import os
 
+from parametros import Parametro
+
 class Menu( Cena ):
-    def __init__( self, scene_manager, size ):
-        super().__init__( scene_manager, size )
+    def __init__( self, gerenciador_cenas, tamanho : tuple[ int ] ):
+        super().__init__( gerenciador_cenas, tamanho )
 
         self.background = pygame.transform.scale(
             pygame.image.load(
