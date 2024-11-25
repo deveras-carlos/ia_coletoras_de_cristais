@@ -30,10 +30,8 @@ class Parametro:
 
     MAXIMO_BLOQUEIOS_GERACAO_OBSTACULOS : int = 10
 
+    DURACAO_CICLO_TEMPESTADE : int = 120_000
+
     # Base
     BASE_X : int = 1
     BASE_Y : int = 1
-
-    # Visual
-    SCREEN_WINDOW_WIDTH = 1280
-    SCREEN_WINDOW_HEIGHT = 720

@@ -1,14 +1,17 @@
 from parametros import Parametro
+from atmosfera import Atmosfera
 from mapa import Mapa
-from random import randint
 from Agentes import Agente, AgenteSimples
+from random import randint
 
 class Simulacao:
     def __init__(
             self,
             parametro : Parametro
         ):
+        self.estado_simulacao = "RODANDO"
         self.parametro = parametro
+        self.atmosfera = Atmosfera( self.parametro )
         self.espera_coleta_estrutura_antiga : dict[ tuple[ int ], int ] = dict(  )
 
         self.agentes : dict[ int, Agente ] = dict(  )
@@ -32,6 +35,12 @@ class Simulacao:
             print( *l )
 
     def run( self ):
+        if self.estado_simulacao == "FINALIZADA":
+            return
+        self.atmosfera.run(  )
+        if self.atmosfera.tempo_final is not None:
+            self.estado_simulacao = "FINALIZADA"
+            
         for agente in self.agentes.values(  ):
             agente.run(  )
             print( f"Agente { agente.id } está em ( { agente.x }, { agente.y } ), direção: { agente.direcao } e carrega: { agente.carga }" )
