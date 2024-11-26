@@ -2,12 +2,14 @@ from dataclasses import dataclass
 
 @dataclass
 class Parametro:
-    FPS : int = 60
+    FPS : int = 10
 
     # Simulação
-    QTD_AGENTE_SIMPLES = 4
-
-    AGENTE_SIMPLES_MAPA_ID = -10
+    QTD_AGENTE_SIMPLES = 1
+    QTD_AGENTE_ESTADOS = 1
+    QTD_AGENTE_OBJETIVOS = 1
+    QTD_AGENTE_COOPERATIVO = 1
+    QTD_AGENTE_BDI = 1
 
     TAMANHO_MAPA_HORIZONTAL : int = 100
     TAMANHO_MAPA_VERTICAL : int = 100

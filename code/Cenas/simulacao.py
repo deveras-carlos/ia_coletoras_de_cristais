@@ -25,7 +25,9 @@ class Simulacao( Cena ):
 
         self.build(  )
 
-        print( self.simulador.agentes )
+        self.follow_target = False
+
+        # print( self.simulador.agentes )
         self.target_agente_id = 0
         self.target = self.camadas[ "AGENTES" ][ self.target_agente_id ]
     
@@ -72,8 +74,6 @@ class Simulacao( Cena ):
             pos = ( agente.x * tile_size, agente.y * tile_size )
 
             self.camadas[ "AGENTES" ][ id_agente ] = Block( ( tile_size, tile_size ), pos, surface )
-        
-        print( self.camadas)
 
     def run( self ):
         
@@ -97,7 +97,7 @@ class Simulacao( Cena ):
 
         self.target = self.camadas[ "AGENTES" ][ self.target_agente_id ]
 
-        # Visuals
-        # self.surface.fill( ( 0, 0, 0 ) )
+        if not self.follow_target:
+            self.target = None
 
         self.camera.custom_draw( self.target )

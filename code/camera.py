@@ -25,11 +25,11 @@ class CameraGroup( pygame.sprite.Group ):
 		self.camadas : pygame.sprite.Group = camadas
 
 		# camera speed
-		self.keyboard_speed = 5
+		self.keyboard_speed = 20
 		self.mouse_speed = 0.2
 
 		# zoom 
-		self.zoom_scale = 1.5
+		self.zoom_scale = 2
 
 		self.internal_surf = surface
 		self.internal_surf_size = surface.get_size()
@@ -112,10 +112,11 @@ class CameraGroup( pygame.sprite.Group ):
 		pass
 
 	def custom_draw(self, agente):
-		
-		self.center_target_camera(agente) # Sempre segue o centro do personagem
+		if agente is None:
+			self.keyboard_control()		  # Controla a câmera pelo teclado
+		else:
+			self.center_target_camera(agente) # Sempre segue o centro do personagem
 		# self.box_target_camera(agente)  # Segue a caixa do personagem
-		# self.keyboard_control()		  # Controla a câmera pelo teclado
 		# self.mouse_control()			  # Controla a câmera pelo mouse
 
 		self.internal_surf.fill( (100, 100, 100) )

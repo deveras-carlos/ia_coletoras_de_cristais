@@ -1,24 +1,37 @@
-import pygame
-# from .button import Button
-from .cena import Cena
-from settings import great_color
-import os
-
 from parametros import Parametro
+from dataclasses import fields
 
-class Menu( Cena ):
-    def __init__( self, gerenciador_cenas, tamanho : tuple[ int ] ):
-        super().__init__( gerenciador_cenas, tamanho )
+def menu_terminal(parametros: Parametro):
+    """Menu de terminal para editar os valores de Parametro."""
+    while True:
 
-        self.background = pygame.transform.scale(
-            pygame.image.load(
-                os.getcwd() + "ACHAR IMAGEM BOA"
-            ),
-            ( 1280, 720 )
-        )
-    
-    def build( self ):
-        pass
+        print("\n==== Menu de Configuração ====")
+        for i, field in enumerate(fields(parametros)):
+            value = getattr(parametros, field.name)
+            print(f"{i + 1}. {field.name} (atual: {value})")
+        
+        print(f"{len(fields(parametros)) + 1}. Salvar e sair")
 
-    def run( self ):
-        self.surface.fill( ( 0, 0, 0 ) )
+        try:
+            choice = int(input("\nEscolha uma opção para editar (ou salvar e sair): "))
+            if choice == len(fields(parametros)) + 1:
+                print("Parâmetros salvos:")
+                print(parametros)
+                break
+            elif 1 <= choice <= len(fields(parametros)):
+                selected_field = fields(parametros)[choice - 1]
+                current_value = getattr(parametros, selected_field.name)
+                new_value = input(
+                    f"Digite o novo valor para {selected_field.name} (atual: {current_value}): "
+                )
+                try:
+                    # Tenta converter o valor para o tipo apropriado
+                    casted_value = type(current_value)(new_value)
+                    setattr(parametros, selected_field.name, casted_value)
+                except ValueError:
+                    print("Entrada inválida! O valor não foi alterado.")
+            else:
+                print("Opção inválida! Tente novamente.")
+        except ValueError:
+            print("Entrada inválida! Por favor, insira um número.")
+    return parametros

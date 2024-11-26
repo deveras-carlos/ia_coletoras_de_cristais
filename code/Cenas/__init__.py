@@ -1,3 +1,3 @@
 from .cena import Cena
-from .menu import Menu as CenaMenu
+from .menu import menu_terminal as CenaMenu
 from .simulacao import Simulacao as CenaSimulacao
