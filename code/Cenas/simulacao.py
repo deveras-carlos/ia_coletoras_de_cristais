@@ -1,7 +1,7 @@
 import pygame
 # from .button import Button
 from .cena import Cena
-from settings import great_color, tile_size
+from settings import great_color, tile_size, SCREEN_WIDTH, SCREEN_HEIGHT
 from tile import Block
 
 from parametros import Parametro
@@ -11,7 +11,7 @@ from Agentes import Agente, AgenteSimples
 
 class Simulacao( Cena ):
     def __init__( self, gerenciador_cenas, parametros : Parametro ):
-        super().__init__( gerenciador_cenas, ( parametros.TAMANHO_MAPA_HORIZONTAL * tile_size, parametros.TAMANHO_MAPA_VERTICAL * tile_size ) )
+        super().__init__( gerenciador_cenas, ( SCREEN_WIDTH, SCREEN_HEIGHT ) )
         self.parametros = parametros
         self.simulador : Simulador = Simulador( self.parametros )
 
@@ -21,12 +21,13 @@ class Simulacao( Cena ):
             "AGENTES" : dict(  )
         }
 
-        self.camera = CameraGroup( gerenciador_cenas.screen, self.surface, self.camadas )
+        self.camera = CameraGroup( self.surface, pygame.Surface( ( parametros.TAMANHO_MAPA_HORIZONTAL * tile_size, parametros.TAMANHO_MAPA_VERTICAL * tile_size ) ), self.camadas )
 
         self.build(  )
 
         print( self.simulador.agentes )
-        self.target = self.camadas[ "AGENTES" ][ 0 ]
+        self.target_agente_id = 0
+        self.target = self.camadas[ "AGENTES" ][ self.target_agente_id ]
     
     def build( self ):
         mapa = self.simulador.mapa.matriz
@@ -38,11 +39,11 @@ class Simulacao( Cena ):
                 pos_y = y * tile_size
                 pos = ( pos_x, pos_y )
                 if mapa[ x ][ y ] == self.parametros.OBSTACULO_PEDRA:
-                    surface = None
+                    surface = pygame.image.load( "Assets/stone.png" ).convert_alpha(  )
                 elif mapa[ x ][ y ] == self.parametros.BLOCO_BASE:
-                    surface = None
+                    surface = pygame.image.load( "Assets/base.png" ).convert_alpha(  )
                 else:
-                    surface = None
+                    surface = pygame.image.load( "Assets/grass.png" ).convert_alpha(  )
                 bloco = Block( ( tile_size, tile_size ), pos, surface )
                 self.camadas[ "BACKGROUND" ].add( bloco )
 
@@ -50,11 +51,11 @@ class Simulacao( Cena ):
                     continue
 
                 if mapa[ x ][ y ] == self.parametros.UTILIDADE_CRISTAL_ENERGETICO:
-                    surface = None
-                elif mapa[ x ][ y ] == self.parametros.UTILIDADE_CRISTAL_ENERGETICO:
-                    surface = None
-                elif mapa[ x ][ y ] == self.parametros.UTILIDADE_CRISTAL_ENERGETICO:
-                    surface = None
+                    surface = pygame.image.load( "Assets/energetic_crystal.png" ).convert_alpha(  )
+                elif mapa[ x ][ y ] == self.parametros.UTILIDADE_CRISTAL_METAL_RARO:
+                    surface = pygame.image.load( "Assets/rare_metal.png" ).convert_alpha(  )
+                elif mapa[ x ][ y ] == self.parametros.UTILIDADE_ESTRUTURA_ANTIGA:
+                    surface = pygame.image.load( "Assets/old_structure.png" ).convert_alpha(  )
 
                 recurso = Block( ( tile_size, tile_size ), pos, surface )
                 self.camadas[ "RECURSOS" ].add( recurso )
@@ -71,6 +72,8 @@ class Simulacao( Cena ):
             pos = ( agente.x * tile_size, agente.y * tile_size )
 
             self.camadas[ "AGENTES" ][ id_agente ] = Block( ( tile_size, tile_size ), pos, surface )
+        
+        print( self.camadas)
 
     def run( self ):
         
@@ -92,7 +95,9 @@ class Simulacao( Cena ):
             if not existe_recurso:
                 recurso.kill(  )
 
+        self.target = self.camadas[ "AGENTES" ][ self.target_agente_id ]
+
         # Visuals
-        self.surface.fill( ( 0, 0, 0 ) )
+        # self.surface.fill( ( 0, 0, 0 ) )
 
         self.camera.custom_draw( self.target )

@@ -13,7 +13,7 @@ class CameraGroup( pygame.sprite.Group ):
 		self.half_h = self.display_surface.get_size()[1] // 2
 
 		# box setup
-		self.camera_borders = {'left': 500, 'right': 500, 'top': 250, 'bottom': 250}
+		self.camera_borders = {'left': 100, 'right': 100, 'top': 50, 'bottom': 50}
 		l = self.camera_borders['left']
 		t = self.camera_borders['top']
 		w = self.display_surface.get_size()[0]  - (self.camera_borders['left'] + self.camera_borders['right'])
@@ -29,6 +29,8 @@ class CameraGroup( pygame.sprite.Group ):
 		self.mouse_speed = 0.2
 
 		# zoom 
+		self.zoom_scale = 1.5
+
 		self.internal_surf = surface
 		self.internal_surf_size = surface.get_size()
 		self.internal_rect = self.internal_surf.get_rect(center = (self.half_w,self.half_h))
@@ -36,6 +38,7 @@ class CameraGroup( pygame.sprite.Group ):
 		self.internal_offset = pygame.math.Vector2()
 		self.internal_offset.x = self.internal_surf_size[0] // 2 - self.half_w
 		self.internal_offset.y = self.internal_surf_size[1] // 2 - self.half_h
+		
 
 	def center_target_camera(self, target):
 		self.offset.x = target.rect.centerx - self.half_w
@@ -110,12 +113,12 @@ class CameraGroup( pygame.sprite.Group ):
 
 	def custom_draw(self, agente):
 		
-		# self.center_target_camera(agente) # Sempre segue o centro do personagem
-		self.box_target_camera(agente)  # Segue a caixa do personagem
+		self.center_target_camera(agente) # Sempre segue o centro do personagem
+		# self.box_target_camera(agente)  # Segue a caixa do personagem
 		# self.keyboard_control()		  # Controla a câmera pelo teclado
 		# self.mouse_control()			  # Controla a câmera pelo mouse
 
-		self.internal_surf.fill( (20, 20, 20) )
+		self.internal_surf.fill( (100, 100, 100) )
 		
 		# Rotation
 		cam_rect_base = self.camera_rect_base.topleft + self.offset
@@ -148,8 +151,9 @@ class CameraGroup( pygame.sprite.Group ):
 				self.internal_surf.blit(sprite.image, offset_pos)
 
 
-		scaled_rect = self.internal_surf.get_rect(center = ( self.half_w, self.half_h ))
+		scaled_surf = pygame.transform.scale(self.internal_surf,self.internal_surface_size_vector * self.zoom_scale)
+		scaled_rect = scaled_surf.get_rect(center = ( self.half_w, self.half_h ))
 
-		self.display_surface.blit(self.internal_surf, scaled_rect )
+		self.display_surface.blit(scaled_surf, scaled_rect )
 
 		# self.draw_ui(  )
