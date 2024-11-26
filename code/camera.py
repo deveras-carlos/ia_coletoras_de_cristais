@@ -2,8 +2,8 @@ import pygame
 from settings import tile_size
 import os
 
-class CameraGroup(pygame.sprite.Group):
-	def __init__(self, display, surface : pygame.Surface, scenary):
+class CameraGroup( pygame.sprite.Group ):
+	def __init__( self, display, surface : pygame.Surface, camadas : dict ):
 		super().__init__()
 		self.display_surface = display
 
@@ -21,8 +21,8 @@ class CameraGroup(pygame.sprite.Group):
 		self.camera_rect = pygame.Rect(l,t,w,h)
 		self.camera_rect_base = pygame.Rect( 0, 0, self.display_surface.get_size()[0], self.display_surface.get_size()[1] )
 
-		# scenary
-		self.scenary : pygame.sprite.Group = scenary
+		# camadas
+		self.camadas : pygame.sprite.Group = camadas
 
 		# camera speed
 		self.keyboard_speed = 5
@@ -119,15 +119,8 @@ class CameraGroup(pygame.sprite.Group):
 		
 		# Rotation
 		cam_rect_base = self.camera_rect_base.topleft + self.offset
-		agente_display_pos = agente.rect.center - cam_rect_base
-		agente.camera_rect_base = cam_rect_base
-		mouse_pos = pygame.mouse.get_pos()
 
-		agente_to_mouse = pygame.math.Vector2( mouse_pos[ 0 ] - agente_display_pos[ 0 ], mouse_pos[ 1 ] - agente_display_pos[ 1 ] )
-		agente_facing_angle = agente_to_mouse.angle_to( ( 0, -1 ) ) - 180
-		agente.image = pygame.transform.rotate( agente.image, agente_facing_angle )
-
-		for sprite in self.scenary[ "ground" ].sprites():
+		for sprite in self.camadas[ "BACKGROUND" ].sprites():
 			spr_x = sprite.rect.centerx
 			spr_y = sprite.rect.centery
 			in_camera_horizontally = spr_x >= cam_rect_base[ 0 ] - tile_size and spr_x <= self.camera_rect_base.right + self.offset[ 0 ] + tile_size
@@ -136,8 +129,16 @@ class CameraGroup(pygame.sprite.Group):
 				offset_pos = sprite.rect.topleft - self.offset + self.internal_offset
 				self.internal_surf.blit(sprite.image, offset_pos)
 		
-		# active elements
-		for sprite in sorted(self.sprites(),key = lambda sprite: sprite.rect.centery):
+		for sprite in self.camadas[ "RECURSOS" ].sprites():
+			spr_x = sprite.rect.centerx
+			spr_y = sprite.rect.centery
+			in_camera_horizontally = spr_x >= cam_rect_base[ 0 ] - tile_size and spr_x <= self.camera_rect_base.right + self.offset[ 0 ] + tile_size
+			in_camera_vertically = spr_y >= cam_rect_base[ 1 ] - tile_size and spr_y <= self.camera_rect_base.bottom + self.offset[ 1 ] + tile_size
+			if in_camera_horizontally and in_camera_vertically:
+				offset_pos = sprite.rect.topleft - self.offset + self.internal_offset
+				self.internal_surf.blit(sprite.image, offset_pos)
+		
+		for sprite in self.camadas[ "AGENTES" ].values():
 			spr_x = sprite.rect.centerx
 			spr_y = sprite.rect.centery
 			in_camera_horizontally = spr_x >= cam_rect_base[ 0 ] - tile_size and spr_x <= self.camera_rect_base.right + self.offset[ 0 ] + tile_size
@@ -151,4 +152,4 @@ class CameraGroup(pygame.sprite.Group):
 
 		self.display_surface.blit(self.internal_surf, scaled_rect )
 
-		self.draw_ui(  )
+		# self.draw_ui(  )

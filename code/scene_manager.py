@@ -24,7 +24,7 @@ class SceneManager:
         self.click_button_start = pygame.time.get_ticks()
         self.click_button_time_delay = 400 # Número mágico. Consertar depois
         
-        self.state = "start"
+        self.state = "loading"
 
     def listen_input( self, mouse_pos, mouse_pressed, keys ):
         if not mouse_pressed[ 0 ]: # Se o botão esquerdo do mouse não estiver sendo pressionado, não faz nada
@@ -52,7 +52,10 @@ class SceneManager:
                 pass
             case "loading":
                 self.backup_scene = self.current_scene
+                self.parametros = Parametro(  )
                 self.current_scene = CenaSimulacao( self, self.parametros )
+                self.current_scene.build(  )
+                self.state = "simulation"
             case "simulation":
                 pass
             case _:

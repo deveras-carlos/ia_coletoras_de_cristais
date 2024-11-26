@@ -82,6 +82,8 @@ class Agente:
                 print("Fallback to random movement after failed pathfinding.")
                 self.nova_direcao()
             self.idx_caminho_base = 0
+            if ( x, y ) in self.cristais.get( utilidade ):
+                self.cristais.get( utilidade ).remove( ( x, y ) )
         elif not self.alvo and len( self.cristais[ self.parametro.UTILIDADE_CRISTAL_ENERGETICO ] | \
                  self.cristais[ self.parametro.UTILIDADE_CRISTAL_METAL_RARO ] ) > 0:
             return
@@ -106,6 +108,8 @@ class Agente:
                 self.nova_direcao()
             self.idx_caminho_base = 0
             self.mapa[ x ][ y ] = -1
+            if ( x, y ) in self.cristais.get( utilidade ):
+                self.cristais.get( utilidade ).remove( ( x, y ) )
 
     def nova_direcao( self, visao = None ):
         pass

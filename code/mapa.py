@@ -6,8 +6,8 @@ from random import randint
 class Mapa:
     def __init__( self, parametro : Parametro, agentes : dict[ int, Agente ] ):
         self.parametro : Parametro = parametro
-        self.matriz : list[ list[ int ] ] = [ [ -1 for _ in range( self.parametro.TAMANHO_MAPA_HORIZONTAL ) ]
-                       for _ in range( self.parametro.TAMANHO_MAPA_VERTICAL ) ]
+        self.matriz : list[ list[ int ] ] = [ [ -1 for _ in range( self.parametro.TAMANHO_MAPA_HORIZONTAL + 2 ) ]
+                       for _ in range( self.parametro.TAMANHO_MAPA_VERTICAL + 2 ) ]
 
         self.obstaculos : set = set(  )
         self.cristais   : dict[ int, set[ tuple[ int ] ] ] = {

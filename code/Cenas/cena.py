@@ -1,5 +1,5 @@
 import pygame
-from Scenes.button import Button
+# from Scenes.button import Button
 from settings import great_color
 import os
 
@@ -27,7 +27,7 @@ class Cena:
 
         self.font_button = os.getcwd() + "ACHAR FONTE BOA" # Caminho para fonte
 
-        self.build(  )
+        # self.build(  )
 
     def build( self ):
         pass

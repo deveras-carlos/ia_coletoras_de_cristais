@@ -1,8 +1,7 @@
 import sys
 import pygame
 
-from simulador import Simulador
-from parametros import Parametro
+from scene_manager import SceneManager
 
 if __name__ == "__main__":
     pygame.init(  )
@@ -13,8 +12,7 @@ if __name__ == "__main__":
     clock = pygame.time.Clock(  )
     screen = pygame.display.set_mode( ( SCREEN_WIDTH, SCREEN_HEIGHT ) )
     pygame.display.set_caption( "Agentes" )
-    parametro = Parametro(  )
-    simulacao = Simulador( parametro )
+    gerenciador_cenas = SceneManager(  )
 
     while True:
         for event in pygame.event.get(  ):
@@ -22,7 +20,7 @@ if __name__ == "__main__":
                 pygame.quit(  )
                 sys.exit(  )
         
-        simulacao.run(  )
+        gerenciador_cenas.run(  )
 
         pygame.display.update(  )
         clock.tick( FPS )

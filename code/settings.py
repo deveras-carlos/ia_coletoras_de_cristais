@@ -10,4 +10,4 @@ accent_color = pygame.Color(152, 142, 230)
 great_color = pygame.Color(200, 20, 51)
 
 # Map setup
-tile_size = 32
+tile_size = 8
