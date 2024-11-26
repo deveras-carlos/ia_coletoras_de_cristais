@@ -15,19 +15,17 @@ if __name__ == "__main__":
     pygame.display.set_caption( "Agentes" )
     parametro = Parametro(  )
     simulacao = Simulacao( parametro )
+    Stop_simulation=False
 
     while True:
         for event in pygame.event.get(  ):
-        
-            if event.type == pygame.KEYDOWN:
-
+            if event.type== pygame.KEYDOWN:
                 Stop_simulation=not Stop_simulation
             if event.type == pygame.QUIT:
                 pygame.quit(  )
                 sys.exit(  )
-        
         if not Stop_simulation:
             simulacao.run(  )
-
+    
         pygame.display.update(  )
         clock.tick( FPS )

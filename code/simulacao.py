@@ -3,7 +3,7 @@ from mapa import Mapa
 from random import randint
 from Agentes import Agente, AgenteSimples
 from Agentes.Estados import AgenteEstados
-
+from Agentes.Objetivos import AgenteObjetivos
 class Simulacao:
     def __init__(
             self,
@@ -23,7 +23,7 @@ class Simulacao:
 
     def gerar_agentes( self ):
         for id in range( self.parametro.QTD_AGENTE_SIMPLES ):
-            agente = AgenteEstados( id, self.parametro, self.mapa,
+            agente = AgenteSimples( id, self.parametro, self.mapa,
                                    self.espera_coleta_estrutura_antiga, self.agentes )
 
             self.agentes[ id ] = agente
