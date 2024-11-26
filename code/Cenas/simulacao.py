@@ -39,11 +39,11 @@ class Simulacao( Cena ):
                 pos_y = y * tile_size
                 pos = ( pos_x, pos_y )
                 if mapa[ x ][ y ] == self.parametros.OBSTACULO_PEDRA:
-                    surface = pygame.image.load( "Assets/stone.png" ).convert_alpha(  )
+                    surface = pygame.image.load("../Assets/stone.png" ).convert_alpha(  )
                 elif mapa[ x ][ y ] == self.parametros.BLOCO_BASE:
-                    surface = pygame.image.load( "Assets/base.png" ).convert_alpha(  )
+                    surface = pygame.image.load( "../Assets/base.png" ).convert_alpha(  )
                 else:
-                    surface = pygame.image.load( "Assets/grass.png" ).convert_alpha(  )
+                    surface = pygame.image.load( "../Assets/grass.png" ).convert_alpha(  )
                 bloco = Block( ( tile_size, tile_size ), pos, surface )
                 self.camadas[ "BACKGROUND" ].add( bloco )
 
@@ -51,11 +51,11 @@ class Simulacao( Cena ):
                     continue
 
                 if mapa[ x ][ y ] == self.parametros.UTILIDADE_CRISTAL_ENERGETICO:
-                    surface = pygame.image.load( "Assets/energetic_crystal.png" ).convert_alpha(  )
+                    surface = pygame.image.load( "../Assets/energetic_crystal.png" ).convert_alpha(  )
                 elif mapa[ x ][ y ] == self.parametros.UTILIDADE_CRISTAL_METAL_RARO:
-                    surface = pygame.image.load( "Assets/rare_metal.png" ).convert_alpha(  )
+                    surface = pygame.image.load( "../Assets/rare_metal.png" ).convert_alpha(  )
                 elif mapa[ x ][ y ] == self.parametros.UTILIDADE_ESTRUTURA_ANTIGA:
-                    surface = pygame.image.load( "Assets/old_structure.png" ).convert_alpha(  )
+                    surface = pygame.image.load( "../Assets/old_structure.png" ).convert_alpha(  )
 
                 recurso = Block( ( tile_size, tile_size ), pos, surface )
                 self.camadas[ "RECURSOS" ].add( recurso )

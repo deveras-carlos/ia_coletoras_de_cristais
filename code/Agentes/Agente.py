@@ -167,6 +167,7 @@ class Agente:
             self.idx_caminho_base += 1
             self.parado = False
         elif self.path is None:
+            
             # If no path, fallback to direction-based movement
             if self.direcao:
                 novo_x = self.x + self.direcao[0]
@@ -178,7 +179,7 @@ class Agente:
                     self.parado = False
                 else:
                     self.nova_direcao()  # Try a new direction if blocked
-            else:
+            if self.direcao == (0,0) or not self.direcao:
                 self.nova_direcao()  # Initialize direction if not set
 
     # def bfs(self, mapa, destino):

@@ -45,5 +45,5 @@ class Simulador:
             agente.run(  )
             print( f"Agente { agente.id } está em ( { agente.x }, { agente.y } ), direção: { agente.direcao } e carrega: { agente.carga }" )
 
-        self.printar_mapa(  )
+        #self.printar_mapa(  )
         print(  )
