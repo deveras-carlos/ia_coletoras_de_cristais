@@ -3,6 +3,7 @@ from atmosfera import Atmosfera
 from mapa import Mapa
 from Agentes import Agente, AgenteSimples
 from random import randint
+from Agentes.Objetivos import AgenteObjetivos
 
 class Simulador:
     def __init__(
@@ -25,7 +26,7 @@ class Simulador:
 
     def gerar_agentes( self ):
         for id in range( self.parametro.QTD_AGENTE_SIMPLES ):
-            agente = AgenteSimples( id, self.parametro, self.mapa,
+            agente = AgenteObjetivos( id, self.parametro, self.mapa,
                                    self.espera_coleta_estrutura_antiga, self.agentes )
 
             self.agentes[ id ] = agente
@@ -43,7 +44,7 @@ class Simulador:
             
         for agente in self.agentes.values(  ):
             agente.run(  )
-            print( f"Agente { agente.id } está em ( { agente.x }, { agente.y } ), direção: { agente.direcao } e carrega: { agente.carga }" )
+            # print( f"Agente { agente.id } está em ( { agente.x }, { agente.y } ), direção: { agente.direcao } e carrega: { agente.carga }" )
 
         #self.printar_mapa(  )
-        print(  )
+        # print(  )

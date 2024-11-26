@@ -8,6 +8,7 @@ from parametros import Parametro
 from simulador import Simulador
 from camera import CameraGroup
 from Agentes import Agente, AgenteSimples
+from Agentes.Objetivos import AgenteObjetivos
 
 class Simulacao( Cena ):
     def __init__( self, gerenciador_cenas, parametros : Parametro ):
@@ -25,7 +26,7 @@ class Simulacao( Cena ):
 
         self.build(  )
 
-        print( self.simulador.agentes )
+        # print( self.simulador.agentes )
         self.target_agente_id = 0
         self.target = self.camadas[ "AGENTES" ][ self.target_agente_id ]
     
@@ -64,7 +65,7 @@ class Simulacao( Cena ):
         for id_agente in self.simulador.agentes:
             agente = self.simulador.agentes[ id_agente ]
             surface = None
-            if isinstance( agente, AgenteSimples ):
+            if isinstance( agente, AgenteObjetivos ):
                 surface = None
             # elif isinstance( agente,  ):
             #     surface = None

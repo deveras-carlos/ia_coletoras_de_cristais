@@ -8,7 +8,7 @@ if __name__ == "__main__":
     pygame.mixer.init(  )
     SCREEN_WIDTH = 1280
     SCREEN_HEIGHT = 720
-    FPS = 15
+    FPS = 5
     clock = pygame.time.Clock(  )
     screen = pygame.display.set_mode( ( SCREEN_WIDTH, SCREEN_HEIGHT ) )
     pygame.display.set_caption( "Agentes" )

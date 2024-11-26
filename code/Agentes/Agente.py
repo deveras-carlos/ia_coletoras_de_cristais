@@ -25,6 +25,19 @@ class Agente:
             ( -1, 1 ), ( 0, 1 ), ( 1, 1 )
         ]
 
+        self.visao_cristais = [
+            # Linha acima da posição central
+            (-2, -2), (-1, -2), (0, -2), (1, -2), (2, -2),
+            # Linha à esquerda da posição central
+            (-2, -1), (-1, -1), (0, -1), (1, -1), (2, -1),
+            # Linha central
+            (-2, 0), (-1, 0), (0, 0), (1, 0), (2, 0),
+            # Linha à direita da posição central
+            (-2, 1), (-1, 1), (0, 1), (1, 1), (2, 1),
+            # Linha abaixo da posição central
+            (-2, 2), (-1, 2), (0, 2), (1, 2), (2, 2)
+        ]
+
         # Movimento
         self.parado = True
         self.direcao : tuple[ int ] = None
@@ -53,7 +66,7 @@ class Agente:
         if self.carga is not None:
             return
         for utilidade in self.cristais:
-            for dx, dy in self.visao:
+            for dx, dy in self.visao_cristais:
                 if ( self.x + dx, self.y + dy ) in self.cristais[ utilidade ]:
                     self.coletar( utilidade, self.x + dx, self.y + dy )
     
@@ -73,7 +86,9 @@ class Agente:
     def coletar( self, utilidade, x, y ):
         if self.alvo and ( x, y ) != self.alvo:
             return
-        if utilidade < self.parametro.UTILIDADE_ESTRUTURA_ANTIGA:
+        # if self.path:
+        #     return
+        if self.carga is None and utilidade < self.parametro.UTILIDADE_ESTRUTURA_ANTIGA:
             self.carga = utilidade
             self.carga_loc_encontrada = ( x, y )
             self.mapa[ x ][ y ] = -1
@@ -135,17 +150,19 @@ class Agente:
         #     self.parado = True
         # else:
         #     self.parado = False
-        novo_x = self.x + self.direcao[0]
-        novo_y = self.y + self.direcao[1]
+        if self.direcao!=None:
+            novo_x = self.x + self.direcao[0]
+            novo_y = self.y + self.direcao[1]
 
-        if not (1 <= novo_x < self.parametro.TAMANHO_MAPA_HORIZONTAL - 1 and \
-                 1 <= novo_y < self.parametro.TAMANHO_MAPA_VERTICAL - 1):
-            self.nova_direcao()  # Try another direction
-            return
-        if self.mapa[novo_x][novo_y] == self.parametro.OBSTACULO_PEDRA:
-            self.nova_direcao()  # Try another direction
-            return
-        self.parado = False
+            if not (1 <= novo_x < self.parametro.TAMANHO_MAPA_HORIZONTAL - 1 and \
+                    1 <= novo_y < self.parametro.TAMANHO_MAPA_VERTICAL - 1):
+                self.nova_direcao()  # Try another direction
+                return
+            if self.mapa[novo_x][novo_y] == self.parametro.OBSTACULO_PEDRA:
+                self.nova_direcao()  # Try another direction
+                return
+            self.parado = False
+        
 
     def movimentar( self ):
         # if self.path is not None:
@@ -248,8 +265,9 @@ class Agente:
         direcoes_carga_antiga = [
             (-1, 0), (1, 0), (0, 1), (0, -1)
         ]
-
-        direcoes = direcoes_carga_antiga if self.carga >= self.parametro.UTILIDADE_ESTRUTURA_ANTIGA else direcoes_carga_simples
+        
+        direcoes = direcoes_carga_simples
+        
 
         filas = deque([(self.x, self.y)])
         visitados = set([(self.x, self.y)])
