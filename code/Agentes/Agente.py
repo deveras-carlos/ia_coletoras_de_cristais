@@ -5,7 +5,7 @@ from parametros import Parametro
 class Agente:
     def __init__( self, id : int, parametro : Parametro, mapa,
                  espera_coleta_estrutura_antiga : dict[ tuple[ int ], set[ int ] ],
-                  agentes : dict ):
+                  agentes : dict, bdi_recursos_descobertos = None ):
         self.id = id
         self.parametro : Parametro = parametro
         self.mapa : list[ list ] = mapa.matriz
@@ -48,26 +48,35 @@ class Agente:
         # Coleta
         self.carga = None
         self.waiting_for_coordinate = None
-        self.partner = None
+        self.partners = None
 
         # Path
         self.path = None
         self.tamanho_path = 0
         self.idx_caminho_base = 0
 
-        # Utilidade
+        # BDI
+        if bdi_recursos_descobertos is None:
+            self.BDI_recursos_descobertos = list(  )
+        else:
+            self.BDI_recursos_descobertos = bdi_recursos_descobertos
+    
+        # Estatísticas
         self.qtd_cristais : dict[ int, int ] = {
             self.parametro.UTILIDADE_CRISTAL_ENERGETICO : 0,
             self.parametro.UTILIDADE_CRISTAL_METAL_RARO : 0,
             self.parametro.UTILIDADE_ESTRUTURA_ANTIGA   : 0
         }
-    
+
     def checa_cristal( self ):
         if self.carga is not None:
             return
         for utilidade in self.cristais:
             for dx, dy in self.visao_cristais:
+                pos = (self.x + dx, self.y + dy)
                 if ( self.x + dx, self.y + dy ) in self.cristais[ utilidade ]:
+                    if ( utilidade, pos ) not in self.BDI_recursos_descobertos and self.carga:
+                        self.BDI_recursos_descobertos.append( ( utilidade, pos ) )
                     self.coletar( utilidade, self.x + dx, self.y + dy )
     
     def checa_base( self ):
@@ -83,48 +92,56 @@ class Agente:
                     self.espera_coleta_estrutura_antiga.pop( self.carga_loc_encontrada )
                     self.carga_loc_encontrada = None
 
-    def coletar( self, utilidade, x, y ):
-        if self.alvo and ( x, y ) != self.alvo:
-            return
-        # if self.path:
-        #     return
-        if self.carga is None and utilidade < self.parametro.UTILIDADE_ESTRUTURA_ANTIGA:
-            self.carga = utilidade
-            self.carga_loc_encontrada = ( x, y )
-            self.mapa[ x ][ y ] = -1
-            self.path = self.bfs( self.mapa, self.centro_base )
-            if not self.path:
-                print("Fallback to random movement after failed pathfinding.")
-                self.nova_direcao()
-            self.idx_caminho_base = 0
-            if ( x, y ) in self.cristais.get( utilidade ):
-                self.cristais.get( utilidade ).remove( ( x, y ) )
-        elif not self.alvo and len( self.cristais[ self.parametro.UTILIDADE_CRISTAL_ENERGETICO ] | \
-                 self.cristais[ self.parametro.UTILIDADE_CRISTAL_METAL_RARO ] ) > 0:
-            return
-        else:
-            if self.espera_coleta_estrutura_antiga.get( ( x, y ) ):
-                self.partner = self.espera_coleta_estrutura_antiga.get( ( x, y ) ).pop(  )
-                self.espera_coleta_estrutura_antiga.pop( ( x, y ) )
-                partner = self.agentes[ self.partner ]
+    def __coletar_recurso( self, utilidade, x, y ):
+        print( f"Agente { self.id } está coletando recurso { utilidade } em { ( x, y ) }" )
+        self.carga_loc_encontrada = ( x, y )
+        self.carga = utilidade
+        self.path = self.bfs( self.mapa, self.centro_base )
+        if not self.path:
+            print("Fallback to random movement after failed pathfinding.")
+            self.nova_direcao()
+        self.idx_caminho_base = 0
+        self.mapa[ x ][ y ] = -1
+        if ( x, y ) in self.cristais.get( utilidade ):
+            self.cristais.get( utilidade ).remove( ( x, y ) )
+        self.alvo = None
+
+    def __coletar_estrutura_antiga( self, utilidade, x, y ):
+        print( f"Espera no { ( x, y ) } : { self.espera_coleta_estrutura_antiga.get( ( x, y ) ) }" )
+        fila_antiga = self.espera_coleta_estrutura_antiga.get( ( x, y ) )
+        if ( fila_antiga and self.id not in fila_antiga ) or len( fila_antiga ) > 1:
+            while fila_antiga:
+                partner_id = fila_antiga.pop(  )
+                partner = self.agentes[ partner_id ]
                 partner.partner = self.id
                 partner.parado = False
+                partner.__coletar_recurso( utilidade, x, y )
                 self.aguardando_na_coordenada = None
+                self.path = None
+            self.__coletar_recurso( utilidade, x, y )
+        else:
+            self.espera_coleta_estrutura_antiga[ ( x, y ) ].add( self.id )
+            self.aguardando_na_coordenada = ( x, y )
+            self.parado = True
+            self.path = None
+
+    def coletar( self, utilidade, x, y ):
+        if self.alvo:
+            if self.alvo != ( x, y ): return
+            if utilidade == self.parametro.UTILIDADE_ESTRUTURA_ANTIGA:
+                self.__coletar_estrutura_antiga( utilidade, x, y )
             else:
-                self.espera_coleta_estrutura_antiga[ ( x, y ) ].add( self.id )
-                self.aguardando_na_coordenada = ( x, y )
-                self.parado = True
-            
-            self.carga_loc_encontrada = ( x, y )
-            self.carga = utilidade
-            self.path = self.bfs( self.mapa, self.centro_base )
-            if not self.path:
-                print("Fallback to random movement after failed pathfinding.")
-                self.nova_direcao()
-            self.idx_caminho_base = 0
-            self.mapa[ x ][ y ] = -1
-            if ( x, y ) in self.cristais.get( utilidade ):
-                self.cristais.get( utilidade ).remove( ( x, y ) )
+                self.__coletar_recurso( utilidade, x, y )
+        else:
+            if self.espera_coleta_estrutura_antiga.get( ( x, y ), None ) is not None:
+                self.__coletar_estrutura_antiga( utilidade, x, y )
+            elif self.carga is None and utilidade < self.parametro.UTILIDADE_ESTRUTURA_ANTIGA:
+                self.__coletar_recurso( utilidade, x, y )
+            elif len( self.cristais[ self.parametro.UTILIDADE_CRISTAL_ENERGETICO ] | \
+                    self.cristais[ self.parametro.UTILIDADE_CRISTAL_METAL_RARO ] ) > 0:
+                return
+            else:
+                self.__coletar_estrutura_antiga( utilidade, x, y )
 
     def nova_direcao( self, visao = None ):
         pass
@@ -148,7 +165,7 @@ class Agente:
         
 
     def movimentar( self ):
-        print(f'direção {self.direcao}')
+        # print(f'direção {self.direcao}')
         if self.path is not None and self.idx_caminho_base < self.tamanho_path:
             # Move along the path
             x, y = self.path[self.idx_caminho_base]
@@ -158,9 +175,7 @@ class Agente:
         elif self.path is not None and self.idx_caminho_base == self.tamanho_path:
             self.path = self.bfs( self.mapa, self.centro_base )
             self.idx_caminho_base = 0
-            
         elif self.path is None:
-            
             # If no path, fallback to direction-based movement
             if self.direcao:
                 novo_x = self.x + self.direcao[0]
@@ -174,6 +189,8 @@ class Agente:
                     self.nova_direcao()  # Try a new direction if blocked
             if self.direcao == (0,0) or not self.direcao:
                 self.nova_direcao()  # Initialize direction if not set
+        else:
+            print(f"Agente {self.id} não conseguiu se mover.")
     
     def bfs(self, mapa, destino):
         """

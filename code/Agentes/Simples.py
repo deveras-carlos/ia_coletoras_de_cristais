@@ -7,8 +7,8 @@ from .Agente import Agente
 class AgenteSimples( Agente ):
     def __init__( self, id : int, parametro : Parametro, mapa,
                  espera_coleta_estrutura_antiga : dict[ tuple[ int ], set[ int ] ],
-                  agentes : dict[ int, Agente ] ):
-        super(  ).__init__( id, parametro, mapa, espera_coleta_estrutura_antiga, agentes )
+                  agentes : dict, bdi_recursos_descobertos = None ):
+        super().__init__(id, parametro, mapa, espera_coleta_estrutura_antiga, agentes, bdi_recursos_descobertos)
         self.direcao_inicial(  )
 
     def nova_direcao( self, visao = None ):

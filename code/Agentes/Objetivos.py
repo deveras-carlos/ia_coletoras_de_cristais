@@ -5,8 +5,10 @@ from .Agente import Agente
 import random
 
 class AgenteObjetivos(Agente):
-    def __init__(self, id, parametro, mapa, espera_coleta_estrutura_antiga, agentes):
-        super().__init__(id, parametro, mapa, espera_coleta_estrutura_antiga, agentes)
+    def __init__( self, id : int, parametro : Parametro, mapa,
+                 espera_coleta_estrutura_antiga : dict[ tuple[ int ], set[ int ] ],
+                  agentes : dict, bdi_recursos_descobertos = None ):
+        super().__init__(id, parametro, mapa, espera_coleta_estrutura_antiga, agentes, bdi_recursos_descobertos)
         self.recursos_descobertos = list()  # Conjunto para armazenar recursos encontrados
     
     def nova_direcao( self, visao = None ):
@@ -66,6 +68,6 @@ class AgenteObjetivos(Agente):
                         self.direcao_inicial(  )
                     print( f"Depois: { self.recursos_descobertos }" )
                     
-                if self.carga == self.parametro.UTILIDADE_ESTRUTURA_ANTIGA:
-                    self.espera_coleta_estrutura_antiga.pop( self.carga_loc_encontrada )
-                    self.carga_loc_encontrada = None
+                    if self.carga == self.parametro.UTILIDADE_ESTRUTURA_ANTIGA:
+                        self.espera_coleta_estrutura_antiga.pop( self.carga_loc_encontrada )
+                        self.carga_loc_encontrada = None
