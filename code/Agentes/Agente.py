@@ -52,7 +52,7 @@ class Agente:
 
         # Path
         self.path = None
-        self.tamanho_path_base = 0
+        self.tamanho_path = 0
         self.idx_caminho_base = 0
 
         # Utilidade
@@ -133,23 +133,6 @@ class Agente:
         pass
 
     def colisao( self ):
-        # if not self.parado and self.path and self.idx_caminho_base < self.tamanho_path_base:
-        #     return
-        
-        # novo_x = self.x + self.direcao[ 0 ]
-        # novo_y = self.y + self.direcao[ 1 ]
-
-        # if novo_x < 1 or novo_x >= self.parametro.TAMANHO_MAPA_HORIZONTAL or \
-        # novo_y < 1 or novo_y >= self.parametro.TAMANHO_MAPA_VERTICAL:
-        #     self.nova_direcao(  )
-        #     self.parado = True
-        #     return
-
-        # if self.mapa[ novo_x ][ novo_y ] == self.parametro.OBSTACULO_PEDRA:
-        #     self.nova_direcao(  )
-        #     self.parado = True
-        # else:
-        #     self.parado = False
         if self.direcao!=None:
             novo_x = self.x + self.direcao[0]
             novo_y = self.y + self.direcao[1]
@@ -165,24 +148,17 @@ class Agente:
         
 
     def movimentar( self ):
-        # if self.path is not None:
-        #     if self.idx_caminho_base < self.tamanho_path_base:
-        #         x, y = self.path[ self.idx_caminho_base ]
-        #         self.x = x
-        #         self.y = y
-        #         self.idx_caminho_base += 1
-        #         self.parado = False
-        #     else:
-        #         self.idx_caminho_base = 0
-        # elif not self.parado:
-        #     self.x += self.direcao[ 0 ]
-        #     self.y += self.direcao[ 1 ]
-        if self.path is not None and self.idx_caminho_base < self.tamanho_path_base:
+        print(f'direção {self.direcao}')
+        if self.path is not None and self.idx_caminho_base < self.tamanho_path:
             # Move along the path
             x, y = self.path[self.idx_caminho_base]
             self.x, self.y = x, y
             self.idx_caminho_base += 1
             self.parado = False
+        elif self.path is not None and self.idx_caminho_base == self.tamanho_path:
+            self.path = self.bfs( self.mapa, self.centro_base )
+            self.idx_caminho_base = 0
+            
         elif self.path is None:
             
             # If no path, fallback to direction-based movement
@@ -198,59 +174,6 @@ class Agente:
                     self.nova_direcao()  # Try a new direction if blocked
             if self.direcao == (0,0) or not self.direcao:
                 self.nova_direcao()  # Initialize direction if not set
-
-    # def bfs(self, mapa, destino):
-    #     """
-    #     Implementa o BFS para encontrar o caminho até uma célula destino.
-        
-    #     :param mapa: Lista de listas representando o mapa onde -2 são obstáculos.
-    #     :param destino: Tupla (x_dest, y_dest) indicando a célula de destino.
-    #     :return: Lista de tuplas indicando o caminho do agente até o destino ou None se não houver caminho.
-    #     """
-    #     direcoes_carga_simples = [
-    #         ( -1, 1 ), ( 0, 1 ), ( 1, 1 ),
-    #         ( -1, 0 ), ( 1, 0 ),
-    #         ( -1, -1 ), ( 0, -1 ), ( 1, -1 )
-    #     ]
-    #     direcoes_carga_antiga = [
-    #         ( -1, 0 ), ( 1, 0 ), ( 0, 1 ), ( 0, -1 )
-    #     ]
-
-    #     direcoes = direcoes_carga_antiga if self.carga >= self.parametro.UTILIDADE_ESTRUTURA_ANTIGA else direcoes_carga_simples
-
-    #     filas = deque([(self.x, self.y)])
-    #     visitados = set([(self.x, self.y)])
-    #     pai = {}  # Armazena o caminho de cada nó
-
-    #     while filas:
-    #         atual = filas.popleft()
-            
-    #         # Se chegarmos ao destino, reconstruímos o caminho
-    #         if atual == destino:
-    #             caminho = []
-    #             while atual in pai:
-    #                 caminho.append(atual)
-    #                 atual = pai[atual]
-    #             caminho.reverse()
-    #             caminho = caminho[ :-3 ]
-    #             self.tamanho_path_base = len( caminho )
-    #             print( caminho )
-    #             return caminho
-            
-    #         # Explorar vizinhos válidos
-    #         for dx, dy in direcoes:
-    #             nx, ny = atual[0] + dx, atual[1] + dy
-                
-    #             # Verifica limites do mapa e obstáculos
-    #             if (0 < nx < len(mapa) and 0 < ny < len(mapa[0]) and
-    #                     mapa[nx][ny] != self.parametro.OBSTACULO_PEDRA and
-    #                     (nx, ny) not in visitados):
-    #                 filas.append( ( nx, ny ) )
-    #                 visitados.add( ( nx, ny ) )
-    #                 pai[ ( nx, ny ) ] = atual  # Registra o nó pai
-        
-    #     # Se não houver caminho
-    #     return None
     
     def bfs(self, mapa, destino):
         """
@@ -283,7 +206,7 @@ class Agente:
                     caminho.append(atual)
                     atual = pai[atual]
                 caminho.reverse()
-                self.tamanho_path_base = len(caminho)
+                self.tamanho_path = len(caminho)
                 return caminho
 
             # Explore neighbors

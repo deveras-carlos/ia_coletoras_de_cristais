@@ -40,6 +40,7 @@ class Simulador:
             return
         self.atmosfera.run(  )
         if self.atmosfera.tempo_final is not None:
+            print( "Aconteceu a tempestade!!!" )
             self.estado_simulacao = "FINALIZADA"
             
         for agente in self.agentes.values(  ):

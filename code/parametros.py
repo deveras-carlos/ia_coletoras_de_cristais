@@ -5,7 +5,7 @@ class Parametro:
     FPS : int = 60
 
     # Simulação
-    QTD_AGENTE_SIMPLES = 4
+    QTD_AGENTE_SIMPLES = 1
 
     AGENTE_SIMPLES_MAPA_ID = -10
 
