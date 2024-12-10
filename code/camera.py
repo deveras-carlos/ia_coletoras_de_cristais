@@ -1,6 +1,7 @@
 import pygame
 from settings import tile_size
 import os
+from simulador import Simulador
 
 class CameraGroup( pygame.sprite.Group ):
 	def __init__( self, display, surface : pygame.Surface, camadas : dict ):
@@ -108,8 +109,19 @@ class CameraGroup( pygame.sprite.Group ):
 
 		self.offset += mouse_offset_vector * self.mouse_speed
 
-	def draw_ui( self, simulacao, agente ):
-		pass
+	def draw_ui( self, simulacao : Simulador, agente ):
+		current_time = simulacao.atmosfera.tempo_atual // 1_000
+
+		font = pygame.font.Font(None, 72)  # Use a default font with size 36
+
+		# Render the current time text
+		time_text = font.render(f"Time: {current_time}s", True, (255, 255, 255))  # White color
+
+		# Get the rectangle of the rendered text
+		text_rect = time_text.get_rect(topleft=(10, 10))  # Position at the top-left corner with padding
+
+		# Draw the text on the screen
+		self.display_surface.blit(time_text, text_rect)
 
 	def custom_draw(self, agente):
 		

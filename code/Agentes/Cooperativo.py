@@ -72,7 +72,7 @@ class AgenteCooperativo(AgenteObjetivos):
             self.idx_caminho_base = 0
             self.parado = False
             self.alvo = melhor_recurso
-            print(f"Agente {self.id} decidiu ajudar na coleta em {melhor_recurso} com utilidade {melhor_utilidade:.2f}")
+            # print(f"Agente {self.id} decidiu ajudar na coleta em {melhor_recurso} com utilidade {melhor_utilidade:.2f}")
 
     def checa_cristal(self):
         """

@@ -59,14 +59,14 @@ class AgenteObjetivos(Agente):
                     self.direcao = None
                     self.path = None
                     
-                    print( f"Antes: { self.recursos_descobertos }" )
+                    # print( f"Antes: { self.recursos_descobertos }" )
                     if self.recursos_descobertos:
                         utilidade, pos = self.recursos_descobertos.pop(  )
                         self.path = self.bfs( self.mapa, pos )
                         self.idx_caminho_base = 0
                     else:
                         self.direcao_inicial(  )
-                    print( f"Depois: { self.recursos_descobertos }" )
+                    # print( f"Depois: { self.recursos_descobertos }" )
                     
                     if self.carga == self.parametro.UTILIDADE_ESTRUTURA_ANTIGA:
                         self.espera_coleta_estrutura_antiga.pop( self.carga_loc_encontrada )

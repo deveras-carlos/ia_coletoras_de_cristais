@@ -5,9 +5,9 @@ class Parametro:
     FPS : int = 60
 
     # Simulação
-    QTD_AGENTE_SIMPLES = 2
-    QTD_AGENTE_ESTADOS = 2
-    QTD_AGENTE_OBJETIVOS = 2
+    QTD_AGENTE_SIMPLES = 6
+    QTD_AGENTE_ESTADOS = 4
+    QTD_AGENTE_OBJETIVOS = 3
     QTD_AGENTE_COOPERATIVO = 2
     QTD_AGENTE_BDI = 2
 

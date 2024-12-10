@@ -14,7 +14,7 @@ class AgenteSimples( Agente ):
     def nova_direcao( self, visao = None ):
         if visao is None:
             visao = self.visao
-        print( visao )
+        # print( visao )
         index = random.randint( 0, len( visao ) - 1 )
         self.direcao = visao[ index ]
     

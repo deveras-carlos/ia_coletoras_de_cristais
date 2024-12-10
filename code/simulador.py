@@ -40,11 +40,10 @@ class Simulador:
         print( "====================================================" )
         for agente in self.agentes.values(  ):
             print( "----------------------------------------------------" )
-            print( f"Dados de coleta do agente { agente.id }" )
+            print( f"Dados de coleta do agente { agente.id } - tipo: { type( agente ) }" )
             for recurso in agente.qtd_cristais:
                 print( f"Total de recursos coletados do tipo { recurso }: { agente.qtd_cristais[ recurso ] }" )
-            for recurso in agente.qtd_cristais:
-                print( f"Total de utilidade { sum( [ util * qtd for util, qtd in agente.qtd_cristais.items(  ) ] ) }" )
+            print( f"Total de utilidade { sum( [ util * qtd for util, qtd in agente.qtd_cristais.items(  ) ] ) }" )
             print( "----------------------------------------------------" )
         print( "====================================================" )
 

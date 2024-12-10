@@ -1,14 +1,13 @@
 import pygame
 # from .button import Button
 from .cena import Cena
-from settings import great_color, tile_size, SCREEN_WIDTH, SCREEN_HEIGHT
+from settings import great_color, accent_color, tile_size, SCREEN_WIDTH, SCREEN_HEIGHT
 from tile import Block
 
 from parametros import Parametro
 from simulador import Simulador
 from camera import CameraGroup
-from Agentes import Agente, AgenteSimples
-from Agentes.Objetivos import AgenteObjetivos
+from Agentes import Agente, AgenteSimples, AgenteEstados, AgenteObjetivos, AgenteCooperativo, AgenteBDI
 
 class Simulacao( Cena ):
     def __init__( self, gerenciador_cenas, parametros : Parametro ):
@@ -65,16 +64,25 @@ class Simulacao( Cena ):
         for id_agente in self.simulador.agentes:
             agente = self.simulador.agentes[ id_agente ]
             surface = None
+            if isinstance( agente, AgenteSimples ):
+                surface = pygame.Surface( ( tile_size, tile_size ) )
+                surface.fill( pygame.Color( "#0640B3" ) )
+            if isinstance( agente, AgenteEstados ):
+                surface = pygame.Surface( ( tile_size, tile_size ) )
+                surface.fill( pygame.Color( "#9EFFB3" ) )
             if isinstance( agente, AgenteObjetivos ):
-                surface = None
-            # elif isinstance( agente,  ):
-            #     surface = None
+                surface = pygame.Surface( ( tile_size, tile_size ) )
+                surface.fill( accent_color )
+            if isinstance( agente, AgenteCooperativo ):
+                surface = pygame.Surface( ( tile_size, tile_size ) )
+                surface.fill( pygame.Color( "#FFCE24" ) )
+            if isinstance( agente, AgenteBDI ):
+                surface = pygame.Surface( ( tile_size, tile_size ) )
+                surface.fill( great_color )
             
             pos = ( agente.x * tile_size, agente.y * tile_size )
 
             self.camadas[ "AGENTES" ][ id_agente ] = Block( ( tile_size, tile_size ), pos, surface )
-        
-        print( self.camadas)
 
     def run( self ):
         
@@ -99,6 +107,7 @@ class Simulacao( Cena ):
         self.target = self.camadas[ "AGENTES" ][ self.target_agente_id ]
 
         # Visuals
-        # self.surface.fill( ( 0, 0, 0 ) )
+        self.surface.fill( ( 0, 0, 0 ) )
 
         self.camera.custom_draw( self.target )
+        self.camera.draw_ui( self.simulador, self.target )

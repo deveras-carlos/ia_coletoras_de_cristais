@@ -93,7 +93,7 @@ class Agente:
                     self.carga_loc_encontrada = None
 
     def __coletar_recurso( self, utilidade, x, y ):
-        print( f"Agente { self.id } está coletando recurso { utilidade } em { ( x, y ) }" )
+        # print( f"Agente { self.id } está coletando recurso { utilidade } em { ( x, y ) }" )
         self.carga_loc_encontrada = ( x, y )
         self.carga = utilidade
         self.path = self.bfs( self.mapa, self.centro_base )
@@ -107,7 +107,7 @@ class Agente:
         self.alvo = None
 
     def __coletar_estrutura_antiga( self, utilidade, x, y ):
-        print( f"Espera no { ( x, y ) } : { self.espera_coleta_estrutura_antiga.get( ( x, y ) ) }" )
+        # print( f"Espera no { ( x, y ) } : { self.espera_coleta_estrutura_antiga.get( ( x, y ) ) }" )
         fila_antiga = self.espera_coleta_estrutura_antiga.get( ( x, y ) )
         if ( fila_antiga and self.id not in fila_antiga ) or len( fila_antiga ) > 1:
             while fila_antiga:
