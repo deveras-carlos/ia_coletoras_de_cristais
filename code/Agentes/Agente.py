@@ -109,7 +109,7 @@ class Agente:
     def __coletar_estrutura_antiga( self, utilidade, x, y ):
         # print( f"Espera no { ( x, y ) } : { self.espera_coleta_estrutura_antiga.get( ( x, y ) ) }" )
         fila_antiga = self.espera_coleta_estrutura_antiga.get( ( x, y ) )
-        if ( fila_antiga and self.id not in fila_antiga ) or len( fila_antiga ) > 1:
+        if ( fila_antiga and self.id not in fila_antiga ) or ( fila_antiga and len( fila_antiga ) > 1 ):
             while fila_antiga:
                 partner_id = fila_antiga.pop(  )
                 partner = self.agentes[ partner_id ]
@@ -120,6 +120,8 @@ class Agente:
                 self.path = None
             self.__coletar_recurso( utilidade, x, y )
         else:
+            if not self.espera_coleta_estrutura_antiga.get( ( x, y ) ):
+                self.espera_coleta_estrutura_antiga[ ( x, y ) ] = set(  )
             self.espera_coleta_estrutura_antiga[ ( x, y ) ].add( self.id )
             self.aguardando_na_coordenada = ( x, y )
             self.parado = True

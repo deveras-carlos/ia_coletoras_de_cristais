@@ -34,7 +34,7 @@ class Parametro:
 
     MAXIMO_BLOQUEIOS_GERACAO_OBSTACULOS : int = 10
 
-    DURACAO_CICLO_TEMPESTADE : int = 5_000
+    DURACAO_CICLO_TEMPESTADE : int = 30_000
 
     # Base
     BASE_X : int = 1
